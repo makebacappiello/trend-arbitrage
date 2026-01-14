@@ -25,8 +25,6 @@ The app:
   - Number of sources
 - Displays the top emerging trends in a simple React UI
 
----
-
 ## 🧱 Tech Stack
 
 ### Frontend
@@ -47,22 +45,20 @@ The app:
 
 ## 📁 Folder Structure
 
-trend-arbitrage/  
-├── server/  
-│ ├── index.js # Express server entry  
-│ ├── routes/ # API routes  
-│ ├── services/ # Data fetchers + logic  
-│ ├── db/ # PostgreSQL connection  
-│ └── models/ # SQL tables  
-│  
-├── client/  
-│ ├── src/  
-│ │ └── App.jsx # React UI  
-│  
-├── .env # Environment variables  
+```
+trend-arbitrage/
+├── server/
+│ ├── index.js # Express server entry
+│ ├── routes/ # API routes
+│ ├── services/ # Data fetchers + logic
+│ ├── db/ # PostgreSQL connection
+│ └── models/ # SQL tables
+├── client/
+│ ├── src/
+│ └── App.jsx # React UI
+├── .env # Environment variables
 └── README.md
-
----
+```
 
 ---
 
@@ -99,42 +95,44 @@ You should see:
 
 Create the following tables in your PostgreSQL database:
 
-` CREATE TABLE mentions (
-id SERIAL PRIMARY KEY,
-category TEXT,
-source TEXT,
-creator TEXT,
-normalized_topic TEXT,
-display_topic TEXT,
-created_at TIMESTAMP,
-points INT,
-comments INT,
-raw_title TEXT,
-raw_url TEXT
+```SQL
+ CREATE TABLE mentions (
+ id SERIAL PRIMARY KEY,
+  category TEXT,
+  source TEXT,
+  creator TEXT,
+  normalized_topic TEXT,
+  display_topic TEXT,
+  created_at TIMESTAMP,
+  points INT,
+  comments INT,
+  raw_title TEXT,
+  raw_url TEXT
 );
 
-CREATE TABLE trends (
-id SERIAL PRIMARY KEY,
-category TEXT,
-normalized_topic TEXT,
-display_topic TEXT,
-score FLOAT,
-sources_list TEXT[],
-creator_diversity INT,
-mentions_recent INT,
-mentions_prev INT,
-mentions_7d INT,
-engagement_recent INT,
-computed_at TIMESTAMP,
-last_seen_at TIMESTAMP,
-UNIQUE (category, normalized_topic)
+ CREATE TABLE trends (
+  id SERIAL PRIMARY KEY,
+  category TEXT,
+  normalized_topic TEXT,
+  display_topic TEXT,
+  score FLOAT,
+  sources_list TEXT[],
+  creator_diversity INT,
+  mentions_recent INT,
+  mentions_prev INT,
+  mentions_7d INT,
+  engagement_recent INT,
+  computed_at TIMESTAMP,
+  last_seen_at TIMESTAMP,
+  UNIQUE (category, normalized_topic)
 );
+```
 
 ---
 
 ### 4. Frontend Setup
 
-`cd client
+`cd client`
 `npm install`
 `npm run dev `
 
@@ -194,9 +192,9 @@ This helps surface **early-stage trends**, not already-popular ones.
 ## 🧑‍💻 How to Use the App
 
 1. Select the category (`tech`)
-2. Choose a limit
-3. Click **Refresh**
-4. View emerging topics with:
+1. Choose a limit
+1. Click **Refresh**
+1. View emerging topics with:
 
    - Rising score
    - Mentions growth
