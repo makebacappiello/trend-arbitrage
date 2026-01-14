@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 export default function App() {
-  // 1) State (things React remembers)
   const [category, setCategory] = useState("tech");
   const [limit, setLimit] = useState(20);
   const [trends, setTrends] = useState([]);
@@ -9,7 +8,7 @@ export default function App() {
   const [status, setStatus] = useState(""); // "Loading...", "Refreshing...", etc.
   const [error, setError] = useState("");
 
-  // 2) Your backend URL (keep it simple)
+  //backend URL to server
   const API_BASE = "http://127.0.0.1:3000";
 
   // 3) Load trends from the server
