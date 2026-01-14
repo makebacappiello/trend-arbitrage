@@ -1,67 +1,62 @@
 import fetch from "node-fetch";
 
-// Fetch new GitHub repositories for the TECH category
+// Fetch trending GitHub repos created in the last 7 days (TECH category)
 export async function fetchGitHubTech(limit = 20) {
-
-  // 1) Figure out the date from 7 days ago
+  // 1) Get date string like "2026-01-07"
   const sevenDaysAgo = getDateDaysAgo(7);
 
-  // 2) Build the GitHub search URL
+  // 2) Build GitHub Search API URL
   const url =
     "https://api.github.com/search/repositories" +
-    "?q=created:>=" + sevenDaysAgo +
+    `?q=created:>=${sevenDaysAgo}` +
     "&sort=stars" +
     "&order=desc" +
-    "&per_page=" + limit;
+    `&per_page=${limit}`;
 
-  // 3) GitHub requires a User-Agent header
-  const headers = {
-    "User-Agent": "trend-arbitrage-prototype"
-  };
+  // 3) Headers (GitHub wants a User-Agent)
+  const headers = { "User-Agent": "trend-arbitrage-prototype" };
 
-  // 4) If a GitHub token exists, include it (optional)
+  // Optional: include token to avoid rate limits
   if (process.env.GITHUB_TOKEN) {
-    headers["Authorization"] = "Bearer " + process.env.GITHUB_TOKEN;
+    headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
   }
 
-  // 5) Make the request
-  const response = await fetch(url, { headers });
+  // 4) Fetch data
+  try {
+    const response = await fetch(url, { headers });
 
-  // If something goes wrong, return an empty list
-  if (!response.ok) {
-    return [];
-  }
+    // If request fails, return empty array
+    if (!response.ok) {
+      console.log("GitHub request failed:", response.status);
+      return [];
+    }
 
-  // 6) Convert response to JSON
-  const data = await response.json();
+    const data = await response.json();
+    const repos = data.items || [];
 
-  // 7) Get the repositories array (or empty if missing)
-  const repos = data.items || [];
-
-  // 8) Convert GitHub repos into our app's format
-  const results = [];
-
-  for (let i = 0; i < repos.length && i < limit; i++) {
-    const repo = repos[i];
-
-    results.push({
+    // 5) Convert GitHub repos into app format
+    return repos.slice(0, limit).map((repo) => ({
       source: "github",
       category: "tech",
-      creator: repo.owner ? repo.owner.login : null,
-      title: repo.name + " " + (repo.description || ""),
+      creator: repo.owner?.login || null,
+      title: `${repo.name} ${repo.description || ""}`.trim(),
       url: repo.html_url,
       points: repo.stargazers_count || 0,
       comments: repo.forks_count || 0,
-      created_at: repo.created_at
-        ? new Date(repo.created_at)
-        : new Date()
-    });
+      created_at: repo.created_at ? new Date(repo.created_at) : new Date(),
+    }));
+  } catch (error) {
+    console.log("GitHub fetch error:", error.message);
+    return [];
   }
-
-  return results;
 }
 
-// Helper: returns YYYY-MM-DD for N days ago
+// Helper: returns "YYYY-MM-DD" for N days ago
 function getDateDaysAgo(days) {
   const now = new Date();
-  const past = n
+  const past = new Date(now);
+  past.setDate(now.getDate() - days);
+
+  // Convert to YYYY-MM-DD (GitHub search wants that format)
+  return past.toISOString().slice(0, 10);
+}

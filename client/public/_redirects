@@ -1,0 +1,4 @@
+ /api/* https://trend-arbitrage.onrender.com/
+ :splat 200
+ /\* /index.html 404
+ /* /index.html 200

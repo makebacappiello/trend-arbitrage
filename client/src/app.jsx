@@ -5,59 +5,54 @@ export default function App() {
   const [limit, setLimit] = useState(20);
   const [trends, setTrends] = useState([]);
 
-  const [status, setStatus] = useState(""); // "Loading...", "Refreshing...", etc.
+  const [status, setStatus] = useState("");
   const [error, setError] = useState("");
 
-  //backend URL to server
-  const API_BASE = "http://127.0.0.1:3000";
+  // Vite env var
+  const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:3000";
 
-  // 3) Load trends from the server
   async function loadTrends() {
     setStatus("Loading...");
     setError("");
 
     try {
-      const url =
-        API_BASE + "/api/trends?category=" + category + "&limit=" + limit;
+      const url = `${API_BASE}/api/trends?category=${category}&limit=${limit}`;
       const res = await fetch(url);
       const data = await res.json();
-
       setTrends(data.trends || []);
     } catch (err) {
-      setError("Something went wrong: " + err.message);
+      setError(err.message);
     }
 
     setStatus("");
   }
 
-  // 4) Refresh: tell server to pull new data, then load trends
   async function refreshTrends() {
     setStatus("Refreshing...");
     setError("");
 
     try {
-      await fetch(API_BASE + "/api/trends/refresh", { method: "POST" });
+      await fetch(`${API_BASE}/api/trends/refresh`, { method: "POST" });
       await loadTrends();
     } catch (err) {
-      setError("Something went wrong: " + err.message);
+      setError(err.message);
     }
 
     setStatus("");
   }
 
-  // 5) When category or limit changes, reload automatically
+  // load data when page loads or when category/limit changes
   useEffect(() => {
     loadTrends();
   }, [category, limit]);
 
   return (
     <div style={{ fontFamily: "Arial", padding: 20 }}>
-      <h1>Trend Arbitrage (Prototype)</h1>
+      <h1>Trend Arbitrage</h1>
 
-      {/* Controls */}
       <div style={{ display: "flex", gap: 10, marginBottom: 15 }}>
         <label>
-          Category:{" "}
+          Category:
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
@@ -67,7 +62,7 @@ export default function App() {
         </label>
 
         <label>
-          Limit:{" "}
+          Limit:
           <select
             value={limit}
             onChange={(e) => setLimit(Number(e.target.value))}
@@ -83,7 +78,6 @@ export default function App() {
         <button onClick={loadTrends}>Reload</button>
       </div>
 
-      {/* Status + Error */}
       {status && (
         <p>
           <b>{status}</b>
@@ -91,11 +85,10 @@ export default function App() {
       )}
       {error && (
         <p style={{ color: "red" }}>
-          <b>{error}</b>
+          <b>Error:</b> {error}
         </p>
       )}
 
-      {/* Table */}
       <table
         border="1"
         cellPadding="8"
@@ -112,7 +105,7 @@ export default function App() {
 
         <tbody>
           {trends.map((t) => (
-            <tr key={t.category + "-" + t.normalized_topic}>
+            <tr key={`${t.category}-${t.normalized_topic}`}>
               <td>
                 <b>{t.display_topic}</b>
               </td>
