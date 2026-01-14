@@ -99,8 +99,36 @@ You should see:
 
 Create the following tables in your PostgreSQL database:
 
-`CREATE TABLE mentions (   id SERIAL PRIMARY KEY,  
-category TEXT,   source TEXT,   creator TEXT,   normalized_topic TEXT,   display_topic TEXT,   created_at TIMESTAMP,   points INT,   comments INT,   raw_title TEXT,   raw_url TEXT );  CREATE TABLE trends (   id SERIAL PRIMARY KEY,   category TEXT,   normalized_topic TEXT,   display_topic TEXT,   score FLOAT,   sources_list TEXT[],   creator_diversity INT,   mentions_recent INT,   mentions_prev INT,   mentions_7d INT,   engagement_recent INT,   computed_at TIMESTAMP,   last_seen_at TIMESTAMP,   UNIQUE (category, normalized_topic) );`
+` CREATE TABLE mentions (
+id SERIAL PRIMARY KEY,
+category TEXT,
+source TEXT,
+creator TEXT,
+normalized_topic TEXT,
+display_topic TEXT,
+created_at TIMESTAMP,
+points INT,
+comments INT,
+raw_title TEXT,
+raw_url TEXT
+);
+
+CREATE TABLE trends (
+id SERIAL PRIMARY KEY,
+category TEXT,
+normalized_topic TEXT,
+display_topic TEXT,
+score FLOAT,
+sources_list TEXT[],
+creator_diversity INT,
+mentions_recent INT,
+mentions_prev INT,
+mentions_7d INT,
+engagement_recent INT,
+computed_at TIMESTAMP,
+last_seen_at TIMESTAMP,
+UNIQUE (category, normalized_topic)
+);
 
 ---
 
