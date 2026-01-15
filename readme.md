@@ -2,6 +2,20 @@
 
 A MERN-style prototype (**PostgreSQL instead of MongoDB**) that detects **early-stage trends** by measuring the **velocity and acceleration of mentions** across **non-trending data sources**.
 
+## 🔗 Live Demo
+
+- **Frontend (Netlify):**  
+  https://trend-abitrage-prototype.netlify.app
+
+- **Backend API (Render):**  
+  https://trend-arbitrage.onrender.com
+
+Example API endpoints:
+
+- `/health`
+- `/api/trends?category=tech&limit=20`
+- `POST /api/trends/refresh`
+
 This project is a **full-stack prototype** that finds **emerging tech trends before they become mainstream**.
 
 Instead of using “trending” pages, it pulls **new content** from smaller or early-signal sources and uses a **custom scoring algorithm** to detect what topics are **starting to rise quickly**.

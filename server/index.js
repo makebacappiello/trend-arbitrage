@@ -13,7 +13,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-//existing routes
+//API status route
 app.get("/", (req, res) => {
   res.send("Trend Arbitrage API running");
 });
