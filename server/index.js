@@ -13,6 +13,11 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
+//existing routes
+app.get("/", (req, res) => {
+  res.send("Trend Arbitrage API running");
+});
+
 // quick test route
 app.get("/health", (req, res) => res.send("OK"));
 
